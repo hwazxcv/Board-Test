@@ -10,11 +10,11 @@ import java.util.Collection;
 
 @Data
 @Builder
-
 public class MemberInfo implements UserDetails {
 
     private String email;
     private String password;
+    //맴버 정보 전체를 가져옴
     private Member member;
     private Collection<? extends GrantedAuthority> authorities;
 
