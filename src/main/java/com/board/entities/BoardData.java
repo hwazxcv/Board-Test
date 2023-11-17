@@ -9,13 +9,15 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BoardData {
+public class BoardData extends BaseMember{
     @Id
     @GeneratedValue
     private Long seq;
@@ -33,5 +35,11 @@ public class BoardData {
     @Column(insertable = false)
     private LocalDateTime modDt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userNo")
+    private Member member;
+
+    @ManyToMany(fetch=FetchType.LAZY)
+    private List<HashTag> tags = new ArrayList<>();
 
 }

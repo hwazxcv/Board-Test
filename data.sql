@@ -1,2 +1,0 @@
-INSERT INTO MEMBER (USER_NO,EMAIL,PASSWORD,USER_NM,MOBILE) VALUES(
-    SEQ_MEMBER.nextval,"user01@test.org","$2a$10$GU/gixgf/voshsazVAamu.MkJvixSsfHIivpSJMy16AA9gQCxv386","사용자01","01010001000")
