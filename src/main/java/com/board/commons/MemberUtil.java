@@ -12,7 +12,7 @@ public class MemberUtil {
 
     private final HttpSession session;
 
-    //로그인 상태 체크
+    //로그인 상태 체크 중
     public boolean isLogin(){
 
         return getMember() !=null;
