@@ -36,13 +36,11 @@ public class Member extends Base {
     @Enumerated(EnumType.STRING)
     private MemberType mtype = MemberType.USER; //회원인지 아닌지 판단
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
+    @ToString.Exclude //순환 참조 방지
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY , cascade = CascadeType.REMOVE)
     private List<BoardData> items = new ArrayList<>();
 
-    @OneToOne
-    @JoinColumn(name="profile_seq")
-    private MemberProfile profile;
+
 
 }
 //    @Transient //DB에 반영을 하지않을떄 쓴다.(내부에서만 쓰려는 목적)

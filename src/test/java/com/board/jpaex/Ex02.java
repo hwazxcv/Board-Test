@@ -2,52 +2,98 @@ package com.board.jpaex;
 
 
 import com.board.commons.constants.MemberType;
+import com.board.entities.BoardData;
 import com.board.entities.Member;
+import com.board.models.board.BoardListService;
+import com.board.repositories.BoardDataRepository;
+import com.board.repositories.MemberRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootTest
 @Transactional
+@TestPropertySource(properties = "spring.profiles.active=test")
+
 public class Ex02 {
-
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private BoardDataRepository boardDataRepository;
     @PersistenceContext
-    private EntityManager em;
 
-    @Test
-    void test1(){
+    private EntityManager em;
+    @Autowired
+    private BoardListService boardListService;
+
+    @BeforeEach
+    void init(){
         Member member = Member.builder()
-                .email("userO1@test.org")
+                .email("user01@test.org")
                 .password("123456")
                 .userNm("사용자01")
-                .mobile("01011111111")
                 .mtype(MemberType.USER)
+                .mobile("01000000000")
                 .build();
 
-        em.persist(member);
-        em.flush();
 
-        Member member2 = em.find(Member.class,member.getUserNo());
-        System.out.println(member2); //수정전
+                memberRepository.saveAndFlush(member);
+        List<BoardData> items= new ArrayList<>();
+        for(int i = 1; i<=10; i++){
+            BoardData item = BoardData.builder()
+                    .subject("제목"+i)
+                    .content("내용"+i)
+                    .member(member)
+                    .build();
+            items.add(item);
 
-        try {
-            Thread.sleep(3000);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
-
-
-        member2.setUserNm("(수정)사용자01");
-        em.flush();
-
-        member2 = em.find(Member.class,member.getUserNo());
-        System.out.println(member2); // 수정후
+        boardDataRepository.saveAllAndFlush(items);
+        em.clear();
     }
 
     @Test
-    void test2(){
+    void test1(){
+        List<BoardData> items = boardDataRepository.findAll();
+        for(BoardData item : items){
+            Member member = item.getMember();
+            String email = member.getEmail();
+            System.out.println(email);
 
+        }
+    }
+
+    @Test
+    void test2 (){
+        List<BoardData> items=boardDataRepository.getList2();
+
+    }
+
+    @Test
+    void test3(){
+        List<BoardData> items = boardListService.getList();
+    }
+
+    @Test
+    void test4(){
+        List<BoardData> items = boardDataRepository.findBySubjectContaining("목");
+    }
+
+    @Test
+    void test5(){
+        Member member = memberRepository.findByEmail("user01@test.org").orElse(null);
+        List<BoardData> items =member.getItems();
+        items.stream().forEach(System.out::println);
+
+        memberRepository.delete(member);
+        memberRepository.flush();
     }
 }
