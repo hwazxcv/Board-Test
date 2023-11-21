@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
-    //요청과 응답,주로 회원 정보가 담겨있다.
+    //요청과 응답,주로 로그인 성공한 회원의 정보가 담겨있다.
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 

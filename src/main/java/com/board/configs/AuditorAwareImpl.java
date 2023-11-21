@@ -20,6 +20,6 @@ public class AuditorAwareImpl implements AuditorAware<String> {
             email = memberinfo.getEmail();
          }
         return Optional.ofNullable(email);
-        //로그인한 회원 정보가 테이블에 추가
+        //로그인한 회원 정보가 테이블에 자동 추가
     }
 }

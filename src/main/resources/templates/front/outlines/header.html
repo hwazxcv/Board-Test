@@ -2,14 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.tymeleaf.org/extras/spring-security">
 <header th:fragment="common">
-<!--    로그인 상태일떄-->
+<!--    로그인 상태일떄 시큐리티에서 제공하는"isAuthenticated()가 true가 되면서 보여짐 -->
     <th:block sec:authorize="isAuthenticated()">
         <a th:href="@{/mypage}" th:text="#{마이페이지}"></a>
         <a th:href="@{/member/logout}" th:text="#{로그아웃}"></a>
 
         <a sec:authorize="hasAuthority('ADMIN')" th:href="@{/admin}" th:text="#{사이트 관리}"></a>
     </th:block>
-<!--    미 로드인 상태일때-->
+<!--    미 로그인 상태일때 시큐리티에서 제공하는"isAuthenticated()가 false가 되면서 보여짐-->
     <th:block sec:authorize="isAnonymous()">
         <a th:href="@{/member/join}" th:text="#{회원가입}"></a>
         <a th:href="@{/member/login}" th:text="#{로그인}"></a>

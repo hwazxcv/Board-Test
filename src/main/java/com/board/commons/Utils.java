@@ -15,22 +15,37 @@ import java.util.ResourceBundle;
 @RequiredArgsConstructor
 public class Utils {
     //정적인 자원을 생성
+
+
     private static ResourceBundle validationsBundle;
+
     private static ResourceBundle errorsBundle;
 
+    private static ResourceBundle commonsBundle;
+
     private final HttpServletRequest request;
+
     private final HttpSession session;
 
       //정적인 자원 해제
     static {
-        validationsBundle = ResourceBundle.getBundle("messages.validations");
-        errorsBundle = ResourceBundle.getBundle("messages.errors");
+          validationsBundle = ResourceBundle.getBundle("messages.validations");
+          errorsBundle = ResourceBundle.getBundle("messages.errors");
+          commonsBundle = ResourceBundle.getBundle("messages.commons");
 
     }
     //bundle 타입에 따라서 나오는 값이 바뀌게
     public static String getMessage(String code, String bundleType){
         bundleType = Objects.requireNonNullElse(bundleType,"validation");
-        ResourceBundle bundle = bundleType.equals("error")?errorsBundle:validationsBundle;
+        ResourceBundle bundle = null;
+
+        if (bundleType.equals("common")) {
+            bundle = commonsBundle;
+        } else if (bundleType.equals("error")) {
+            bundle = errorsBundle;
+        } else {
+            bundle = validationsBundle;
+        }
 
         try{
             return bundle.getString(code);
@@ -52,6 +67,7 @@ public class Utils {
 
         return isMobile;
     }
+    //장비에 따라서 모바일인지 PC인지
     public String tpl(String tplPath){
         return String.format("%s/"+tplPath, isMobile()?"mobile":"front");
     }
@@ -80,6 +96,7 @@ public class Utils {
     }
 
 
+    //페이징 처리
     public static int getNumber(int num, int defaultValue) {
         return num <= 0 ? defaultValue : num;
     }

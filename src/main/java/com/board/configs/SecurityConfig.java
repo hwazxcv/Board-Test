@@ -8,7 +8,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -34,7 +33,7 @@ public class SecurityConfig {
                     //성공하면 메인 페이지 실패하면 로그인 페이지(AuthenticationFailureHandler,AuthenticationSuccessHandler 인터페이스) -> models.member에 만들어둠
                     .successHandler(new LoginSuccessHandler())
                     .failureHandler(new LoginFailureHandler());
-        });//DSL
+        });//DSL 로그인 인증 설정
 
         //로그 아웃
         http.logout(c -> {
@@ -50,7 +49,26 @@ public class SecurityConfig {
         //인가 설정 - 접근 통제
         http.authorizeHttpRequests(c ->{
            c.requestMatchers("/mypage/**").authenticated()// 로그인한 여부 (회원만 접근가능 회원 전용 마이페이지)
-            .requestMatchers("/admin/**").hasAuthority("ADMIN") //관리자 권한만 접근 가능
+            //.requestMatchers("/admin/**").hasAuthority("ADMIN") //관리자 권한만 접근 가능
+            .requestMatchers(
+                    "/front/css/**",
+                    "/front/js/**",
+                    "/front/images/**",
+
+                    "/mobile/css/**",
+                    "/mobile/js/**",
+                    "/mobile/images/**",
+
+                    "/admin/css/**",
+                    "/admin/js/**",
+                    "/admin/image/**",
+
+                    "/common/css/**",
+                    "/common/js/**",
+                    "/common/image/**",
+
+                    fileUploadConfig.getUrl()+"**"
+            ).permitAll()
             .anyRequest().permitAll(); //나머지 페이지는 권한 필요 없음 X
         });
 
@@ -72,28 +90,30 @@ public class SecurityConfig {
     }
 
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer(){
-        //시큐리티 설정이 적용될 필요가 없는 경로 설정(정적인 자원 , 파일 자원)
-        return  w-> w.ignoring().requestMatchers(
-                "/front/css/**",
-                         "/front/js/**",
-                         "/front/images/**",
-
-                         "/mobile/css/**",
-                         "/mobile/js/**",
-                         "/mobile/images/**",
-
-                         "/admin/css/**",
-                         "/admin/js/**",
-                         "/admin/image/**",
-
-                         "/common/css/**",
-                         "/common/js/**",
-                         "/common/image/**",
-
-                fileUploadConfig.getUrl()+"**");
-    }
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer(){
+//        //시큐리티 설정이 적용될 필요가 없는 경로 설정(정적인 자원 , 파일 자원)
+//
+//
+//        return  w-> w.ignoring().requestMatchers(
+//                "/front/css/**",
+//                         "/front/js/**",
+//                         "/front/images/**",
+//
+//                         "/mobile/css/**",
+//                         "/mobile/js/**",
+//                         "/mobile/images/**",
+//
+//                         "/admin/css/**",
+//                         "/admin/js/**",
+//                         "/admin/image/**",
+//
+//                         "/common/css/**",
+//                         "/common/js/**",
+//                         "/common/image/**",
+//
+//                fileUploadConfig.getUrl()+"**");
+//    }
 
 
     @Bean
