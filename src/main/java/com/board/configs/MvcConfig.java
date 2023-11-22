@@ -1,6 +1,7 @@
 package com.board.configs;
 
 import com.board.commons.interceptors.CommonInterceptor;
+import com.board.commons.interceptors.SiteConfigInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.MessageSource;
@@ -25,6 +26,9 @@ public class MvcConfig implements WebMvcConfigurer {
     @Autowired
     private CommonInterceptor commonInterceptor;
 
+    @Autowired
+    private SiteConfigInterceptor siteConfigInterceptor;
+
     //컨트롤러 없이 주소와 연결해주는 용도
 //    @Override
 //    public void addViewControllers(ViewControllerRegistry registry) {
@@ -42,6 +46,9 @@ public class MvcConfig implements WebMvcConfigurer {
     //모든 인터셉터 경로
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(commonInterceptor).addPathPatterns("/**");
+
+        registry.addInterceptor(siteConfigInterceptor)
+                .addPathPatterns("/**");
     }
 
     @Override
