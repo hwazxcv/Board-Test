@@ -1,9 +1,12 @@
 package com.board.commons.exceptions;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 
 //공통 예외 처리 클래스
+@Setter @Getter
 public class CommonException extends RuntimeException{
     
 
@@ -19,9 +22,9 @@ public class CommonException extends RuntimeException{
         this.status=status;
     }
     
-    public HttpStatus getStatus(){
-        return status;
-    }
+//    public HttpStatus getStatus(){
+//        return status;
+//    } // setter, getter추가했으므로 제거
     
     
 }

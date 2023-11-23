@@ -21,7 +21,7 @@ public abstract class BaseMember extends Base{
     private String createBy; //생성한 사람(email)
     @LastModifiedDate
     @Column(length = 65,insertable = false)
-    private String modifiedBy;
+    private String modifiedBy;// 수정한 사람
 
 
 
