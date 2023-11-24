@@ -52,7 +52,7 @@ public class BoardController {
     //
     public String save(@Valid BoardConfigForm form , Errors errors , Model model){
 
-        String mode = form.getMode();
+        String mode = Objects.requireNonNullElse(form.getMode() , "add");
         commonProcess(mode,model);
         if(errors.hasErrors()){
             return "admin/board/"+mode;
