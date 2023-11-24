@@ -10,8 +10,8 @@
     <dl>
         <div class="subject" th:text="*{subject}"></div>
         <div class="post_info">
-            <div class="data" th:text="*{#temporals.format(createdAt,'yyyy.MM.dd HH:mm)}"></div>
-            <div class="poster" th:text="*{'작성자 : ' +poster"></div>
+            <div class="data" th:text="*{#temporals.format(createdAt,'yyyy.MM.dd HH:mm')}"></div>
+            <div class="poster" th:text="*{'작성자 : ' + poster}"></div>
         </div>
         <div class="content" th:utext="*{content}"></div>
     </dl>

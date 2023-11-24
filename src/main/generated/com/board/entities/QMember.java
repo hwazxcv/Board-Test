@@ -22,7 +22,7 @@ public class QMember extends EntityPathBase<Member> {
     public final QBase _super = new QBase(this);
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> createAt = _super.createAt;
+    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
     public final StringPath email = createString("email");
 

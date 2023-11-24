@@ -11,10 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +42,7 @@ public class BoardController implements ScriptExceptionProcess {
         return utils.tpl("board/update");
     }
 
-    @GetMapping("/save")
+    @PostMapping("/save")
     public String save(@Valid BoardForm form, Errors errors, Model model){ //게시물저장 -> 이후에 페이지 이동
         String mode = Objects.requireNonNullElse(form.getMode(),"write");
         String bId = form.getBId();
@@ -54,7 +51,7 @@ public class BoardController implements ScriptExceptionProcess {
             return utils.tpl("board/"+mode);
         }
         saveService.save(form);
-        return "redirect:/board/list"+mode;
+        return "redirect:/board/list"+bId;
     }
 
     @GetMapping("/view/{seq}")
