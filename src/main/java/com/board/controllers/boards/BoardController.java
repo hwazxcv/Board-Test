@@ -29,6 +29,7 @@ public class BoardController implements ScriptExceptionProcess {
     private final BoardSaveService saveService;
     private final BoardInfoService infoService;
 
+
     @GetMapping("/write/{bId}")
     public String write(@PathVariable String bId, @ModelAttribute BoardForm form, Model model){ // 게시판 쓰기
         commonProcess(bId,"write", model);

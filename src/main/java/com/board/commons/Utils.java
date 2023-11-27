@@ -97,6 +97,7 @@ public class Utils {
 
 
     //페이징 처리
+    //페이지 값이 0이하 처리
     public static int getNumber(int num, int defaultValue) {
         return num <= 0 ? defaultValue : num;
     }

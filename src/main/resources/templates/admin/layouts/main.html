@@ -3,10 +3,8 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
-    <!--    레이아웃 구성중 토큰 검증-->
     <meta name="_csrf" th:content="${_csrf.token}">
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
-    <!--    레이아웃 구성중 토큰 검증-->
     <meta name="description" th:content="${@siteConf.get('siteDescription')}">
     <title>
         <th:block th:if="${pageTitle != null}" th:text="${pageTitle + ' ::'}"></th:block>
@@ -45,46 +43,3 @@
 <iframe name="ifrmProcess" class="dn"></iframe>
 </body>
 </html>
-
-<!--<!DOCTYPE html>-->
-<!--<html xmlns:th="http://www.thymeleaf.org"-->
-<!--      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    &lt;!&ndash;    레이아웃 구성중 토큰 검증&ndash;&gt;-->
-<!--    <meta name="_csrf" th:content="${_csrf.token}">-->
-<!--    <meta name="_csrf_header" th:content="${_csrf.headerName}">-->
-<!--    &lt;!&ndash;    레이아웃 구성중 토큰 검증&ndash;&gt;-->
-
-<!--    <title th:if="${pageTitle != null}" th:text="${pageTitle}"></title>-->
-<!--    <link rel="stylesheet" type="text/css" th:href="@{/common/css/style.css}">&lt;!&ndash;    공통적인 디자인 경로&ndash;&gt;-->
-<!--    <link rel="stylesheet" type="text/css" th:each="file : ${addCommonCss}"-->
-<!--          th:href="@{/common/css/{file}.css(file=${file})}">&lt;!&ndash;    공통적인 디자인 경로&ndash;&gt;-->
-<!--    <script th:src="@{/common/js/common.js}"></script>&lt;!&ndash;     공통적인 js경로&ndash;&gt;-->
-<!--    <script th:each="file : ${addCommonScript}" th:src="@{/common/js/{file}.js(file=${file})}"></script>&lt;!&ndash;     공통적인 js경로&ndash;&gt;-->
-
-<!--    <link rel="stylesheet" type="text/css" th:href="@{/admin/css/style.css}">-->
-<!--    <link rel="stylesheet" type="text/css" th:each="file : ${addCss}"-->
-<!--          th:href="@{/admin/css/{file}.css(file=${file})}">-->
-
-<!--    <th:block layout:fragment="addCss"></th:block>-->
-
-<!--    <script th:src="@{/admin/js/common.js}"></script>-->
-<!--    <script th:each="file : ${addScript}" th:src="@{/admin/js/{file}.js(file=${file})}"></script>-->
-
-<!--    <th:block layout:fragment="addScript"></th:block>-->
-
-<!--</head>-->
-<!--<body>-->
-<!--<header th:replace="~{admin/outlines/header::common}"></header>-->
-<!--<main>-->
-<!--    <aside th:replace="~{admin/outlines/_side::menu}"></aside>-->
-<!--    <section>-->
-<!--        <th:block th:replace="~{admin/commons/_submenu::menus}"></th:block>-->
-<!--        <section layout:fragment="content"></section>-->
-<!--    </section>-->
-<!--</main>-->
-
-<!--<iframe name="ifrmProcess" class="dn"></iframe>-->
-<!--</body>-->
-<!--</html>-->

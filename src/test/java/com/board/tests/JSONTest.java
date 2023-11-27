@@ -35,7 +35,7 @@ public class JSONTest {
                 .password("123456")
                 .userNm("사용자01")
                 .build();
-        member.setCreateAt(LocalDateTime.now());
+        member.setCreatedAt(LocalDateTime.now());
 
         //json 형식으로 변환
         String json = om.writeValueAsString(member);
