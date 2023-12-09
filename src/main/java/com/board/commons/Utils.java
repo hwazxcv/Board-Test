@@ -81,6 +81,8 @@ public class Utils {
     }
 
     /**
+     * 목록 데이터 처리를 위한
+     *
      * 단일 요청 데이터 조회
      */
     public String getParam(String name) {

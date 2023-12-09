@@ -13,6 +13,8 @@ public class BoardSaveService {
 
     private final BoardDataRepository boardDataRepository;
 
+
+
     //boardForm이라는 커맨드객체가 들어옴
     public void save(BoardForm form){
         Long seq = form.getSeq();
@@ -30,4 +32,5 @@ public class BoardSaveService {
         data.setPoster(form.getPoster());
         boardDataRepository.saveAndFlush(data);
     }
+
 }

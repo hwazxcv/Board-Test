@@ -5,6 +5,7 @@ import com.board.commons.ScriptExceptionProcess;
 import com.board.commons.constants.BoardAuthority;
 import com.board.commons.menus.Menu;
 import com.board.entities.Board;
+import com.board.models.board.config.BoardConfigDeleteService;
 import com.board.models.board.config.BoardConfigInfoService;
 import com.board.models.board.config.BoardConfigSaveService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
 
 @Controller("adminBoardController")
@@ -29,6 +31,8 @@ public class BoardController implements ScriptExceptionProcess {
 
     private final BoardConfigInfoService infoService;
 
+    private final BoardConfigDeleteService deleteService;
+
     @GetMapping
     public String list(@ModelAttribute BoardSearch search, Model model) {
         commonProcess("list", model);
@@ -41,6 +45,27 @@ public class BoardController implements ScriptExceptionProcess {
         return "admin/board/list";
     }
 
+    //PatchMapping 으로 게시판 수정
+    @PatchMapping
+    //                      이름을 다르게 설정해서 들고온 idx을 알려준다.
+    public String updateList(@RequestParam(name="idx", required = false) List<Integer> idxes, Model model){
+
+        saveService.update(idxes);
+
+        //수정 완료시 부모창을 새로 고침
+        model.addAttribute("script" , "parent.location.reload()");
+        return "common/_execute_script";
+    }
+
+    @DeleteMapping
+    public String deleteList(@RequestParam(name="idx",required = false) List<Integer> idxes , Model model){
+
+        deleteService.delete(idxes);
+
+        //삭제 성공시 부모창 새로고침
+        model.addAttribute("script","parent.location.reload()");
+        return "common/_execute_script";
+    }
 
     @GetMapping("/add")
     //                      비어있는 객체라도 자동으로 들어감
@@ -53,6 +78,8 @@ public class BoardController implements ScriptExceptionProcess {
     public String update(@PathVariable String bId, Model model) {
         commonProcess("edit", model);
 
+        BoardConfigForm form = infoService.getForm(bId);
+        model.addAttribute("boardConfigForm" , form);
         return "admin/board/edit";
     }
 

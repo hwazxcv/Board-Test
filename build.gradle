@@ -31,6 +31,7 @@ dependencies {
 	implementation 'com.oracle.database.jdbc:ojdbc11:23.3.0.23.09'
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.3.0'
 	implementation 'org.modelmapper:modelmapper:3.2.0'
+	runtimeOnly 'com.mysql:mysql-connector-j:8.0.33'
 
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
 	annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'

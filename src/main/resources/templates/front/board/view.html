@@ -6,14 +6,34 @@
 
 
 <main layout:fragment="content" th:object="${boardData}">
-
+    <h1>
+        <a th:href="@{/board/list/{bId}(bId=${board.bId})}" th:text="${board.bName}"></a>
+    </h1>
+    <a th:href="@{/board/write/{bId}(bId=${board.bId})}" th:text="${board.bName}"></a>
     <dl>
         <div class="subject" th:text="*{subject}"></div>
         <div class="post_info">
             <div class="data" th:text="*{#temporals.format(createdAt,'yyyy.MM.dd HH:mm')}"></div>
+            <div class="post_info">
+                [[#{작성자}]]:
+                <th:block th:text="*{poster}"></th:block>
+                <th:block th:if="*{member != null}" th:text="*{'('+member.email+')'}"></th:block>
+            </div>
             <div class="poster" th:text="*{'작성자 : ' + poster}"></div>
         </div>
         <div class="content" th:utext="*{content}"></div>
+        <ul th:if="*{attachFiles != null && !attachFiles.isEmpty()}">
+            <li th:each="file,status : *{attachFiles}" th:object="${file}">
+                Download #<th:block th:text=${status.count}></th:block>
+                <a th:href="@{/file/download/{id}(id=*{id})}" th:text="*{fileName}"></a>
+            </li>
+        </ul>
+        <div class="btns">
+            <a th:href="@{/board/write/{bId}(bId=${board.bId})}" th:text="#{글 쓰기}"></a>
+            <a th:href="@{/board/update/{seq}(seq=*{seq})}" th:text="#{글 수정}"></a>
+            <a th:href="@{/board/delete/{seq}(seq=*{seq})" th:text="#{글 삭제}" onclick="return confirm('정말 삭제 하겠습니까?');"></a>
+            <a th:href="@{/board/list/{bId}(bId=${bId})"></a>
+        </div>
     </dl>
 </main>
 </html>

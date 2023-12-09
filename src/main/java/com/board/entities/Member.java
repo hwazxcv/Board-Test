@@ -2,10 +2,7 @@ package com.board.entities;
 
 
 import com.board.commons.constants.MemberType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Member extends Base{
     @Id
-    @GeneratedValue // 자동 증감 번호
+    @GeneratedValue// 자동 증감 번호
     private Long userNo;
 
     @Column(length = 65,unique = true,nullable = false)
