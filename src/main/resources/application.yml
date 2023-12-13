@@ -2,15 +2,17 @@ server:
   port: 3000
 
 spring:
-  profiles:
-    active: dev
+#  profiles:
+#    active: dev
 
   #데이터베이스 설정( 오라클 버전 )
   datasource:
     driverClassName: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@127.0.0.1:1521:orcl
+    url: jdbc:oracle:thin:@localhost:1521:XE
+#   url: jdbc:oracle:thin:@127.0.0.1:1521:orcl
     username: PROJECT
-    password: _aA123456
+    password: 1111
+#    password: _aA123456
 
   # JPA 설정
   jpa:
@@ -23,7 +25,7 @@ spring:
         use_sql_comments: true
         dialect: org.hibernate.dialect.OracleDialect
     hibernate:
-      ddlAuto: create
+      ddlAuto: update
 
   # 파일 업로드 설정
   servlet:

@@ -22,10 +22,10 @@ public class QFileInfo extends EntityPathBase<FileInfo> {
     public final QBaseMember _super = new QBaseMember(this);
 
     //inherited
-    public final StringPath createBy = _super.createBy;
+    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
+    public final StringPath createdBy = _super.createdBy;
 
     public final BooleanPath done = createBoolean("done");
 

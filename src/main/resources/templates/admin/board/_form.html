@@ -5,8 +5,8 @@
     <table class="table-cols">
         <tr>
             <th>게시판 아이디</th>
-            <td th:if="*{mode !='edit' }">
-                <!--                    아이디와 이름이 필수 데이터-->
+            <td th:if="*{mode != 'edit'}">
+<!--                                            아이디와 이름이 필수 데이터-->
                 <input type="text" name="bId" th:field="*{bId}">
                 <div class="errors" th:each="err : ${#fields.errors('bId')}" th:text="${err}"></div>
             </td>
@@ -20,7 +20,6 @@
             <td>
                 <input type="text" name="bName" th:field="*{bName}">
                 <div class="errors" th:each="err : ${#fields.errors('bName')}" th:text="${err}"></div>
-                <!--                    아이디와 이름이 필수 데이터-->
             </td>
         </tr>
         <tr>
