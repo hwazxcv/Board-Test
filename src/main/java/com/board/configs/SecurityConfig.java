@@ -90,32 +90,6 @@ public class SecurityConfig {
     }
 
 
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer(){
-//        //시큐리티 설정이 적용될 필요가 없는 경로 설정(정적인 자원 , 파일 자원)
-//
-//
-//        return  w-> w.ignoring().requestMatchers(
-//                "/front/css/**",
-//                         "/front/js/**",
-//                         "/front/images/**",
-//
-//                         "/mobile/css/**",
-//                         "/mobile/js/**",
-//                         "/mobile/images/**",
-//
-//                         "/admin/css/**",
-//                         "/admin/js/**",
-//                         "/admin/image/**",
-//
-//                         "/common/css/**",
-//                         "/common/js/**",
-//                         "/common/image/**",
-//
-//                fileUploadConfig.getUrl()+"**");
-//    }
-
-
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();

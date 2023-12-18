@@ -6,12 +6,11 @@ import com.board.commons.Pagination;
 import com.board.commons.Utils;
 import com.board.controllers.boards.BoardDataSearch;
 import com.board.controllers.boards.BoardForm;
-import com.board.entities.BoardData;
-import com.board.entities.FileInfo;
-import com.board.entities.Member;
-import com.board.entities.QBoardData;
+import com.board.entities.*;
+import com.board.models.comment.CommentInfoService;
 import com.board.models.file.FileInfoService;
 import com.board.repositories.BoardDataRepository;
+import com.board.repositories.BoardViewRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -22,6 +21,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -29,23 +32,73 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 import java.util.Objects;
 
+import static org.springframework.data.domain.Sort.Order.desc;
+
 @Service
 @RequiredArgsConstructor
 public class BoardInfoService {
 
 
     private final BoardDataRepository boardDataRepository;
+    private final BoardViewRepository boardViewRepository;
+    private final CommentInfoService  commentInfoService;
+
     private final FileInfoService fileInfoService;
     private final HttpServletRequest request;
     private final EntityManager em;
-    private final MemberUtil memberUtill;
+    private final MemberUtil memberUtil;
     private final HttpSession session;
     private final PasswordEncoder encoder;
+    private final Utils utils;
+
+    /**
+     * 조회수 Uid
+     *      비회원 - Utils::guestUid() : ip + User-Agent(브라우저 종류)
+     *      회원 - 회원번호
+     * @return
+     */
+    public int viewUid() {
+        return memberUtil.isLogin() ?
+                memberUtil.getMember().getUserNo().intValue() : utils.guestUid();
+    }
+
+    /**
+     * 게시글 별 조회수 업데이트
+     *
+     * @param seq
+     */
+    public void updateView(Long seq) {
+        // 조회 기록 추가
+        try {
+            BoardView boardView = new BoardView();
+            boardView.setSeq(seq);
+            boardView.setUid(viewUid());
+
+            boardViewRepository.saveAndFlush(boardView);
+        } catch (Exception e) {}
+
+        // 게시글별 총 조회수 산출
+        QBoardView boardView = QBoardView.boardView;
+        long cnt = boardViewRepository.count(boardView.seq.eq(seq));
+
+        // 게시글 데이터에 업데이트(viewCnt)
+        BoardData data = boardDataRepository.findById(seq).orElse(null);
+        if (data == null) return;
+
+        data.setViewCnt((int)cnt);
+        boardDataRepository.flush();
+    }
+
+
+
 
     //게시글 하나 조회
     public BoardData get(Long seq){
         BoardData data = boardDataRepository.findById(seq).orElseThrow(BoardDataNotFoundException::new);
 
+
+        data.setComments(commentInfoService.getList(data.getSeq()));
+        addFileInfo(data);
         return data;
     }
 
@@ -146,7 +199,7 @@ public class BoardInfoService {
     }
 
     public boolean isMine(Long seq) {
-        if (memberUtill.isAdmin()) { // 관리자는 수정, 삭제 모두 가능
+        if (memberUtil.isAdmin()) { // 관리자는 수정, 삭제 모두 가능
             return true;
         }
 
@@ -156,8 +209,8 @@ public class BoardInfoService {
 
             // 회원 등록 게시물이만 직접 작성한 게시글인 경우
             Member boardMember = data.getMember();
-            Member member = memberUtill.getMember();
-            return memberUtill.isLogin() && boardMember.getUserNo().longValue() == member.getUserNo().longValue();
+            Member member = memberUtil.getMember();
+            return memberUtil.isLogin() && boardMember.getUserNo().longValue() == member.getUserNo().longValue();
         } else { // 비회원 게시글
             // 세션에 chk_게시글번호 항목이 있으면 비번 검증 완료
             String key = "chk_" + seq;
@@ -178,6 +231,15 @@ public class BoardInfoService {
         }
 
         return encoder.matches(password, guestPw);
+    }
+
+    public List<BoardData> getList(String bid, int num){
+        QBoardData boardData = QBoardData.boardData;
+        num = Utils.getNumber(num , 10);
+        Pageable pageable = PageRequest.of(0,num , Sort.by(desc("createdAt")));
+       Page<BoardData> data = boardDataRepository.findAll(boardData.board.bId.eq(bid), pageable);
+       return data.getContent();
+
     }
 }
 

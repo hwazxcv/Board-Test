@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="comment" th:object="${boardData}">
+    <div> Total : <th:block th:text="*{commentCnt < 1000 ? commentCnt : #numbers.formatInteger(commentCnt,3,'COMMA')}"></th:block></div>
+<th:block th:replace="~{front/board/_comment_form::form}"></th:block>
+
+
+    <ul id="comments"th:if="*{comment != null && !comment.isEmpty()}">
+        <li th:each="comment : *{comments}" th:object="${comment}" th:id="*{'comment_'+seq}">
+
+            <div class="commenter_info">
+                <div class="commenter">
+                    <th:block th:text="${poster}"></th:block>
+                    <th:block th:if="*{member !=null}" th:text="*{'('+member.email+')'}"></th:block>
+                </div>
+                <div class="comment_date" th:text="*{#temporals.format(createdAt, 'yyyy.MM.dd HH:mm')}"></div>
+            </div>
+
+            <div class="content_box" th:utext="*{@utils.nl2br(content)}" ></div>
+            <div th:if="${@commentInfoService.isEditable(comment)}" class="btns">
+                <a th:href="@{/comment/update/{seq}(seq=*{seq})}" th:text="#{수정}"></a>
+                <a th:href="@{/comment/delete/{seq}(seq=*{seq})}" th:text="#{삭제}" onclick="return confirm('정말삭제하시겠습니까?')"></a>
+            </div>
+        </li>
+
+    </ul>
+
+
+</th:block>
+
+
+
+</html>

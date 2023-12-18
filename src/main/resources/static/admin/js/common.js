@@ -13,7 +13,7 @@ for( const el of checkalls){
 
 
 
-/*양식 처리 클래스 (삭제와 수정) */
+/*양식 처리 자바 스크립트 (삭제와 수정)  스크립트에서 요청으로 전송될 매서드 형식(delete와 patch를 조건에맞게 보내주는 역할) */
     const formActions = document.getElementsByClassName("form-action");
     for (const el of formActions) {
         el.addEventListener("click", function() {

@@ -5,9 +5,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 //편의 기능 로직
@@ -115,5 +116,31 @@ public class Utils {
 
         return Objects.hash(ip, ua);
     }
+    public static Map<String, List<String>> getMessages(Errors errors) {
+        try {
+            Map<String, List<String>> data = new HashMap<>();
+            for (FieldError error : errors.getFieldErrors()) {
+                String field = error.getField();
+                List<String> messages = Arrays.stream(error.getCodes()).sorted(Comparator.reverseOrder())
+                        .map(c -> getMessage(c, "validation"))
+                        .filter(c -> c != null)
+                        .toList();
+
+                data.put(field, messages);
+            }
+
+            return data;
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    public String nl2br(String str){
+        //줄개행 문자를 바꿈
+        return str.replaceAll("\\r","").replaceAll("\\n" ,"<br>");
+    }
+
+
+
 
 }

@@ -1,22 +1,22 @@
 package com.board.controllers.boards;
 
-import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import com.board.commons.ListData;
 import com.board.commons.MemberUtil;
 import com.board.commons.ScriptExceptionProcess;
 import com.board.commons.Utils;
 import com.board.commons.constants.BoardAuthority;
 import com.board.commons.exceptions.AlertBackException;
-import com.board.commons.exceptions.AlertException;
 import com.board.entities.Board;
 import com.board.entities.BoardData;
 import com.board.entities.FileInfo;
 import com.board.models.board.*;
 import com.board.models.board.config.BoardConfigInfoService;
 import com.board.models.board.config.BoardNotFoundException;
+import com.board.models.comment.CommentInfoService;
 import com.board.models.file.FileInfoService;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -41,6 +41,8 @@ public class BoardController implements ScriptExceptionProcess {
     private final BoardDeleteService deleteService;
     private final BoardConfigInfoService configInfoService;
     private final FileInfoService fileInfoService;
+    private final CommentInfoService commentInfoService;
+
 
     private BoardData boardData;
 
@@ -102,17 +104,24 @@ public class BoardController implements ScriptExceptionProcess {
     }
 
     @GetMapping("/view/{seq}")
-    public String view(@PathVariable("seq") Long seq, @ModelAttribute BoardDataSearch search, Model model){
+    public String view(@PathVariable("seq") Long seq,
+                       @ModelAttribute  BoardDataSearch search, Model model) {
+
+        // 게시글 조회수 업데이트
+        infoService.updateView(seq);
+
         BoardData data = infoService.get(seq);
         boardData = data;
-        String bId = data.getBoard().getBId();
-        commonProcess(bId , "view" ,model);
-        search.setBId(bId);
 
-        ListData<BoardData> listData  = infoService.getList(search);
-        model.addAttribute("boardData",data);
-        model.addAttribute("items",listData.getContent());
-        model.addAttribute("pagination",listData.getPagination());
+        String bId = data.getBoard().getBId();
+        commonProcess(bId, "view", model);
+
+        search.setBId(bId);
+        ListData<BoardData> listData = infoService.getList(search);
+
+        model.addAttribute("boardData", data);
+        model.addAttribute("items", listData.getContent());
+        model.addAttribute("pagination", listData.getPagination());
 
         return utils.tpl("board/view");
     }
@@ -141,8 +150,16 @@ public class BoardController implements ScriptExceptionProcess {
 
     @PostMapping("/guest/password")
     public String guestPasswordCheck(@RequestParam("password") String password , HttpSession session , Model model){
+
         Long seq = (Long)session.getAttribute("guest_seq");
+        //댓글 비회원 비밀번호 확인
+        Long commentSeq = (Long)session.getAttribute("comment_seq");
+        if(commentSeq != null){
+            return guestCommentPasswordCheck(commentSeq,password , session , model);
+        }
+
         if(seq == null){
+
             throw new BoardDataNotFoundException();
         }
 
@@ -153,6 +170,25 @@ public class BoardController implements ScriptExceptionProcess {
         String key="chk_"+seq;
         session.setAttribute(key,true);
         session.removeAttribute("guest_seq");
+
+        model.addAttribute("script" , "parent.location.reload()");
+        return "common/_execute_script";
+    }
+
+    private String guestCommentPasswordCheck(Long seq , String password , HttpSession session , Model model){
+
+        if(seq == null){
+
+            throw new BoardDataNotFoundException();
+        }
+
+        if(!commentInfoService.checkGuestPassword(seq, password)){//비번검증 실패시
+            throw new AlertBackException(Utils.getMessage("비밀번호가_일치하지_않습니다.","error"));
+        }
+        //검증 성공시
+        String key ="chk_comment"+seq;
+        session.setAttribute(key,true);
+        session.removeAttribute("comment_seq");
 
         model.addAttribute("script" , "parent.location.reload()");
         return "common/_execute_script";

@@ -51,13 +51,17 @@ public class BoardData extends Base{
 
     private boolean notice; // 공지사항 여부
 
+    private int viewCnt; // 조회수
+
+    private int commentCnt; // 댓글 수
+
+    @Transient
+    private List<CommentData> comments; // 댓글 목록
+
     @Transient //디비에 저장하지 않음
     private List<FileInfo> editorImages;
 
     @Transient
     private List<FileInfo> attachFiles;
-
-
-
 
 }
