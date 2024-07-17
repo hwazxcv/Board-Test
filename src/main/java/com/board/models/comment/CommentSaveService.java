@@ -31,6 +31,7 @@ public class CommentSaveService {
         if(errors.hasErrors()){
             return;
         }
+
         CommentData commentData =null;
         Long seq = form.getSeq();
         if(seq == null){ //추가 -- 게시글 번호, 회원 정보는 바뀌면 안되는 데이터

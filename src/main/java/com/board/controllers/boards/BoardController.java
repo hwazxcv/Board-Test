@@ -17,6 +17,7 @@ import com.board.models.file.FileInfoService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -64,7 +65,7 @@ public class BoardController implements ScriptExceptionProcess {
     @GetMapping("/update/{seq}")
     public String update(@PathVariable("seq") Long seq, Model model) { // 게시글 수정
         if (!infoService.isMine(seq)) { // 직접 작성한 게시글이 아닌 경우
-            throw new AlertBackException(Utils.getMessage("작성한_게시글만_수정할_수_있습니다.", "error"));
+            throw new AlertBackException(Utils.getMessage("작성한_게시글만_수정할_수_있습니다.", "error"), HttpStatus.BAD_REQUEST);
         }
 
         BoardForm form = infoService.getForm(seq);
@@ -86,7 +87,7 @@ public class BoardController implements ScriptExceptionProcess {
         if (mode.equals("update")) {
             Long seq = form.getSeq();
             if (!infoService.isMine(seq)) { // 직접 작성한 게시글이 아닌 경우
-                throw new AlertBackException(Utils.getMessage("작성한_게시글만_수정할_수_있습니다.", "error"));
+                throw new AlertBackException(Utils.getMessage("작성한_게시글만_수정할_수_있습니다.", "error"),HttpStatus.BAD_REQUEST);
             }
         }
         saveService.save(form, errors);
@@ -129,7 +130,7 @@ public class BoardController implements ScriptExceptionProcess {
     @GetMapping("/delete/{seq}")
     public String delete(@PathVariable("seq") Long seq){ //게시판 삭제 -> 이후에 페이지 이동
        if(!infoService.isMine(seq)){
-           throw new AlertBackException(Utils.getMessage("작성한_게시글만_삭제가능합니다","error"));
+           throw new AlertBackException(Utils.getMessage("작성한_게시글만_삭제가능합니다","error"),HttpStatus.BAD_REQUEST);
         }
         BoardData data= infoService.get(seq);
         deleteService.delete(seq);
@@ -164,7 +165,7 @@ public class BoardController implements ScriptExceptionProcess {
         }
 
         if(!infoService.checkGuestPassword(seq, password)){//비번검증 실패시
-            throw new AlertBackException(Utils.getMessage("비밀번호가_일치하지_않습니다.","error"));
+            throw new AlertBackException(Utils.getMessage("비밀번호가_일치하지_않습니다.","error"),HttpStatus.BAD_REQUEST);
         }
         //검증 성공시
         String key="chk_"+seq;
@@ -178,12 +179,11 @@ public class BoardController implements ScriptExceptionProcess {
     private String guestCommentPasswordCheck(Long seq , String password , HttpSession session , Model model){
 
         if(seq == null){
-
             throw new BoardDataNotFoundException();
         }
 
         if(!commentInfoService.checkGuestPassword(seq, password)){//비번검증 실패시
-            throw new AlertBackException(Utils.getMessage("비밀번호가_일치하지_않습니다.","error"));
+            throw new AlertBackException(Utils.getMessage("비밀번호가_일치하지_않습니다.","error"),HttpStatus.BAD_REQUEST);
         }
         //검증 성공시
         String key ="chk_comment"+seq;
@@ -224,11 +224,11 @@ public class BoardController implements ScriptExceptionProcess {
             BoardAuthority authority = board.getAuthority();
             if (!memberUtil.isAdmin() && !memberUtil.isLogin()
                     && authority == BoardAuthority.MEMBER) { // 회원 전용
-                throw new AlertBackException(Utils.getMessage("MemberOnly.board", "error"));
+                throw new AlertBackException(Utils.getMessage("MemberOnly.board", "error"),HttpStatus.BAD_REQUEST);
             }
 
             if (authority == BoardAuthority.ADMIN && !memberUtil.isAdmin()) { // 관리자 전용
-                throw new AlertBackException(Utils.getMessage("AdminOnly.board", "error"));
+                throw new AlertBackException(Utils.getMessage("AdminOnly.board", "error"),HttpStatus.BAD_REQUEST);
             }
         }
 

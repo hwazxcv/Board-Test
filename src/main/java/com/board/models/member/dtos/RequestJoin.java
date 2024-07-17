@@ -9,6 +9,8 @@ import lombok.Data;
  //로그인 요청 데이터
     @Data
     public class RequestJoin {
+
+
         @NotBlank @Email
         private String email;
 

@@ -10,6 +10,7 @@ import com.board.models.comment.CommentInfoService;
 import com.board.models.comment.CommentSaveService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -49,7 +50,7 @@ public class CommentController implements ScriptExceptionProcess {
         if(errors.hasErrors()){
             Map<String , List<String>> messages = Utils.getMessages(errors);
             String message = (new ArrayList<List<String>> (messages.values())).get(0).get(0);
-            throw new AlertException(message);
+            throw new AlertException(message , HttpStatus.BAD_REQUEST);
         }
 
 

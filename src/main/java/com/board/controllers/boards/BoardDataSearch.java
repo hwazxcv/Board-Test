@@ -9,6 +9,6 @@ public class BoardDataSearch {
     private int limit = 20;
 
     private String category;
-    private String sopt;
-    private String skey;
+    private String sopt; // 검색 옵션
+    private String skey; // 검색 키워드
 }

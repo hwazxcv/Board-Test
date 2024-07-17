@@ -89,19 +89,13 @@ public class BoardInfoService {
         boardDataRepository.flush();
     }
 
-
-
-
     //게시글 하나 조회
     public BoardData get(Long seq){
         BoardData data = boardDataRepository.findById(seq).orElseThrow(BoardDataNotFoundException::new);
-
-
         data.setComments(commentInfoService.getList(data.getSeq()));
         addFileInfo(data);
         return data;
     }
-
 
     public BoardForm getForm(Long seq) {
         BoardData data = get(seq);
@@ -112,6 +106,8 @@ public class BoardInfoService {
         return form;
     }
 
+    
+    // 게시판 조회 및 검색 기능( 페이징 ) 
     public ListData<BoardData> getList(BoardDataSearch search) {
         QBoardData boardData = QBoardData.boardData;
         int page = Utils.getNumber(search.getPage(), 1);
@@ -131,8 +127,6 @@ public class BoardInfoService {
             category = category.trim();
             andBuilder.and(boardData.category.eq(category));
         }
-
-
         // 키워드 검색 처리
         if (StringUtils.hasText(skey)) {
             skey = skey.trim();
@@ -161,6 +155,7 @@ public class BoardInfoService {
         }
 
         PathBuilder pathBuilder = new PathBuilder(BoardData.class, "boardData");
+        //QueryDSL 적용
         List<BoardData> items = new JPAQueryFactory(em)
                 .selectFrom(boardData)
                 .leftJoin(boardData.board)
@@ -236,6 +231,7 @@ public class BoardInfoService {
     public List<BoardData> getList(String bid, int num){
         QBoardData boardData = QBoardData.boardData;
         num = Utils.getNumber(num , 10);
+
         Pageable pageable = PageRequest.of(0,num , Sort.by(desc("createdAt")));
        Page<BoardData> data = boardDataRepository.findAll(boardData.board.bId.eq(bid), pageable);
        return data.getContent();

@@ -16,8 +16,6 @@ import java.util.*;
 @RequiredArgsConstructor
 public class Utils {
     //정적인 자원을 생성
-
-
     private static ResourceBundle validationsBundle;
 
     private static ResourceBundle errorsBundle;
@@ -40,9 +38,9 @@ public class Utils {
         bundleType = Objects.requireNonNullElse(bundleType,"validation");
         ResourceBundle bundle = null;
 
-        if (bundleType.equals("common")) {
+        if (bundleType.equals("commons")) {
             bundle = commonsBundle;
-        } else if (bundleType.equals("error")) {
+        } else if (bundleType.equals("errors")) {
             bundle = errorsBundle;
         } else {
             bundle = validationsBundle;
@@ -51,9 +49,17 @@ public class Utils {
         try{
             return bundle.getString(code);
         }catch (Exception e){
-            return null;
+            e.printStackTrace();
+            return "";
         }
     }
+    public static String getMessage(String code) {
+        return getMessage(code, null);
+    }
+
+
+
+
     //현재 접속매개체가 모바일인지 PC인지 확인
     public boolean isMobile() {
 
@@ -135,6 +141,10 @@ public class Utils {
             return null;
         }
     }
+
+
+
+
     public String nl2br(String str){
         //줄개행 문자를 바꿈
         return str.replaceAll("\\r","").replaceAll("\\n" ,"<br>");

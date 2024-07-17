@@ -20,6 +20,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -88,7 +89,7 @@ public class CommentInfoService {
             }
         }else{ // 로그인 상태 작성
             if(!memberUtil.isLogin() || commentMember.getUserNo().longValue() !=memberUtil.getMember().getUserNo().longValue()){
-                throw new AlertBackException(Utils.getMessage("작성한_댓글만_수정_삭제_가가능합니다." , "error"));
+                throw new AlertBackException(Utils.getMessage("작성한_댓글만_수정_삭제_가가능합니다." , "error"), HttpStatus.BAD_REQUEST );
             }
         }
     }

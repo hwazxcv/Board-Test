@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice("com.board.restcontrollers")
-public class CommonRestController {
+public interface CommonRestController {
 
     //공통적인 예외 가장 상위 클래스인 Exception으로 설정 (AOP)
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<JSONData<Object>> errorHandler(Exception e){
+    default ResponseEntity<JSONData<Object>> errorHandler(Exception e){
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 
         if(e instanceof CommonException){

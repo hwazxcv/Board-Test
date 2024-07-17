@@ -113,11 +113,10 @@ public class BoardConfigInfoService { //관리자 페이지 게시판 목록 관
             andBuilder.and(board.authority.in(authorities));
         }
 
-        //Sort.Order.desc ("엔티티 속성명") -- asc도동일하게 사용
+        //Sort.Order.desc ("엔티티 속성명") -- asc도 동일하게 사용
         Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(desc("createdAt")));
 
         Page<Board> data = repository.findAll(andBuilder, pageable);
-
 
         Pagination pagination = new Pagination(page, (int)data.getTotalElements(), 10, limit, request);
 

@@ -15,8 +15,12 @@ public interface MemberRepository extends JpaRepository<Member, Long> , Querydsl
     //완성된 메서드로 이용
     default boolean exists(String email) {
         return exists(QMember.member.email.eq(email));
+    }
 
+    default boolean existsByUserId(String userId) {
+        QMember member = QMember.member;
 
+        return exists(member.userId.eq(userId));
     }
 }
 

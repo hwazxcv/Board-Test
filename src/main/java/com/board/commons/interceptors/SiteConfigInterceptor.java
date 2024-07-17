@@ -15,6 +15,11 @@ import java.util.Map;
 /**
  * 사이트 설정 유지
  *
+ *
+ * @Component("siteConf") --> 타임리프 안에서 사용될 이름
+ * popup 래이아웃에서 전부 siteConfig -->  siteConf  변경함
+ *
+ * Board-Test에 대한 인테셉터 설정
  */
 @Component("siteConf")
 @RequiredArgsConstructor

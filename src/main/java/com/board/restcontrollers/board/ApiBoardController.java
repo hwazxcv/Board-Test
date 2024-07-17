@@ -8,7 +8,6 @@ import com.board.models.board.BoardInfoService;
 import com.board.models.board.BoardSaveService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import oracle.jdbc.proxy.annotation.Post;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -30,7 +29,7 @@ public class ApiBoardController {
     public ResponseEntity<JSONData<Object>> write(@PathVariable String bId , @RequestBody @Valid BoardForm form, Errors errors){
         if(errors.hasErrors()){ // 에러를 JSON으로
             String message = errors.getFieldErrors().stream().map(FieldError::getDefaultMessage).collect(Collectors.joining(","));
-            throw new BadRequestException(message);
+            throw new BadRequestException(message, HttpStatus.BAD_REQUEST);
         }
         saveService.save(form);
 

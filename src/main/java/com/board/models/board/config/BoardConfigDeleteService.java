@@ -5,6 +5,7 @@ import com.board.commons.exceptions.AlertException;
 import com.board.entities.Board;
 import com.board.repositories.BoardRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class BoardConfigDeleteService {
     public void delete(List<Integer> idxes){
 
         if(idxes ==null || idxes.isEmpty()){
-            throw new AlertException("삭제할 게시판을 선택하세요");
+            throw new AlertException("삭제할 게시판을 선택하세요" , HttpStatus.BAD_REQUEST);
 
         }
 

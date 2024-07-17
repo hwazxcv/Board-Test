@@ -7,6 +7,7 @@ import com.board.controllers.admins.BoardConfigForm;
 import com.board.entities.Board;
 import com.board.repositories.BoardRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -47,7 +48,7 @@ public class BoardConfigSaveService {
      * */
     public void update(List<Integer> idxes) {
         if (idxes == null || idxes.isEmpty()) {
-            throw new AlertException("수정할 게시판을 선택하세요.");
+            throw new AlertException("수정할 게시판을 선택하세요." , HttpStatus.BAD_REQUEST);
         }
 
         for (int idx : idxes) {

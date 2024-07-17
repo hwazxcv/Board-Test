@@ -10,7 +10,6 @@ public class BoardNotFoundException extends AlertBackException {
 
 
     public BoardNotFoundException() {
-        super(Utils.getMessage("NotFound.board", "errors"));
-        setStatus(HttpStatus.NOT_FOUND);
+        super(Utils.getMessage("NotFound.board", "errors"),HttpStatus.BAD_REQUEST);
     }
 }
